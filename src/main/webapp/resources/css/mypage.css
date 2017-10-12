@@ -1,0 +1,57 @@
+body {
+	padding-top: 5em;
+}
+
+.setting-hr {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.box {
+	height: 50px;
+	width: 22%;
+	display: inline-block;
+	margin-bottom: 5px;
+	text-align: center;
+	line-height: 50px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.modibtn {
+	background-color: #FF4040;
+	font-size: 1.15em;
+	color: white;
+	margin-top: 10px;
+}
+
+.ui-autocomplete {
+	max-height: 100px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding-right: 20px;
+}
+
+.rowform{
+	margin: 0;
+	padding: 0;
+	margin-bottom: 10px; 
+}
+
+.rowlabel {
+	display: inline-block;
+	height: 75%;
+	width: 15%;
+	margin: 0;
+	padding: 0;
+}
+.rowcontent{
+	display: inline-block;
+	height: 100%;
+	width: 50%;
+	margin: 0;
+	padding: 0;
+}
+.sw-btn{
+	background-color: #A3DD82;
+}

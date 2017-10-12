@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias alias="memberVo" type="com.grad.net.vo.MemberVo"/>
+		<typeAlias alias="codeVo" type="com.grad.net.vo.CodeVo"/>
+		<typeAlias alias="organzVo" type="com.grad.net.vo.OrganzVo"/>
+		<typeAlias alias="resrchAcrsltVo" type="com.grad.net.vo.ResrchAcrsltVo"/>
+		<typeAlias alias="notiVo" type="com.grad.net.vo.NotiVo"/>
+		<typeAlias alias="counselingVo" type="com.grad.net.vo.CounselingVo"/>
+		<typeAlias alias="apndngFileVo" type="com.grad.net.vo.ApndngFileVo"/>
+		<typeAlias alias="studyVo" type="com.grad.net.vo.StudyVo"/>
+	</typeAliases>
+
+	
+	<!-- SQL문을 저장하는 파일 -->
+	<mappers>
+		<mapper resource="mybatis/mappers/member.xml" />
+		<mapper resource="mybatis/mappers/code.xml" />
+		<mapper resource="mybatis/mappers/organz.xml" />
+		<mapper resource="mybatis/mappers/noti.xml" />
+		<mapper resource="mybatis/mappers/counseling.xml" />
+		<mapper resource="mybatis/mappers/apndngfile.xml" />
+		<mapper resource="mybatis/mappers/study.xml" />
+	</mappers>
+</configuration>

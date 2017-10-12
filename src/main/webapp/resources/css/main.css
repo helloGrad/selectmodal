@@ -1,0 +1,191 @@
+.navbar-default {
+	background: none;
+	border: none;
+}
+
+#myNavbar, .navbar-brand {
+	font-size: 18px !important;
+	letter-spacing: 4px;
+}
+
+.navbar-default .navbar-brand {
+	color: #ffffff;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.navbar-default .navbar-nav>li>a {
+	color: #ffffff;
+}
+
+.sub-comment {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.majors {
+	margin-left: 1em;
+}
+
+.majors-container {
+	margin-bottom: 8em;
+}
+
+.nav {
+	z-index: 10;
+	color: white;
+}
+
+.jumbotron {
+	position: relative;
+	z-index: 1;
+	height: 400px;
+	text-align: center;
+	background-image:url(/net/resources/images/higrad-img/background-main.jpg);
+	background-size: cover;
+}
+
+.humanties {
+	z-index: 1;
+	background-image: url(/net/resources/images/higrad-img/humanities.jpg);
+	background-size: cover;
+}
+
+.socialscience {
+	z-index: 1;
+	background-image:url(/net/resources/images/higrad-img/social-science.jpg);
+	background-size: cover;
+}
+
+.naturalscience {
+	z-index: 1;
+	background-image:url(/net/resources/images/higrad-img/natural-science.jpg);
+	background-size: cover;
+}
+
+.engineering {
+	z-index: 1;
+	background-image: url(/net/resources/images/higrad-img/Engineering.jpg);
+	background-size: cover;
+}
+
+.medicine {
+	z-index: 1;
+	background-image: url(/net/resources/images/higrad-img/medicine.jpg);
+	background-size: cover;
+}
+
+.ocean {
+	z-index: 1;
+	background-image: url(/net/resources//images/higrad-img/ocean.jpg);
+	background-size: cover;
+}
+
+.art {
+	z-index: 1;
+	background-image:url(/net/resources/images/higrad-img/art-education.jpg);
+	background-size: cover;
+}
+
+.interdisciplinary {
+	z-index: 1;
+	background-image:url(/net/resources/images/higrad-img/interdisciplinary.jpg);
+	background-size: cover;
+}
+
+.sns-banner {
+	text-align: center;
+}
+
+.jumbotron h1 {
+	margin-top: 1.5em;
+	z-index: 10;
+	color: #ffffff;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px
+		0 #000;
+}
+
+@media screen and (min-width: 768px) {
+	.sns-login {
+		margin-left: 4em;
+	}
+	.thumbnail {
+		width: 25em;
+		height: 12em;
+	}
+	.jumbotron {
+		height: 50rem;
+	}
+	.alert-info {
+		margin-top: -2.5em;
+	}
+	.main-comment {
+		margin-bottom: 3em;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.sns-login {
+		margin-bottom: .5em;
+	}
+	.jumbotron {
+		height: 50rem;
+	}
+	.alert-info {
+		margin-top: -2.5em;
+	}
+	.thumbnail {
+		height: 12em;
+	}
+	.main-comment {
+		margin-bottom: 2em;
+	}
+}
+
+.overlay:after {
+	z-index: -2;
+	position: absolute;
+	content: "";
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0.2;
+}
+
+.overlay-major:after {
+	z-index: -2;
+	position: absolute;
+	content: "";
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0.5;
+}
+
+.overlay-major:hover:after {
+	z-index: -2;
+	position: absolute;
+	content: "";
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0.8;
+}
+
+.grey:after {
+	background-color: #3B5998;
+	z-index: -1;
+}
+
+.black:after {
+	background-color: black;
+	z-index: -1;
+}
+
+.major-title {
+	color: #ffffff;
+	text-align: center;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}

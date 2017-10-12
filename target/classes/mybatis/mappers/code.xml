@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="code">
+
+	<!-- 박가혜  -->
+	<select id="selectCodeList" resultType="codeVo">
+		<![CDATA[
+		select CD_ID as "cdId", CD_NM as "cdNm", CD_DSTNCT as "cdDstnct" 
+		from CD
+		]]>
+	</select>	
+	
+		<!-- 박가혜  -->
+	<select id="selectMajorList" resultType="codeVo" parameterType="string">
+		<![CDATA[
+		select c.cd_id cdId, c.cd_nm cdNm, c.CD_DSTNCT cdDstnct, concat(substr(c.PRNTS_CD_ID,1,3),'0000') prntsCdId,(select c2.CD_NM from cd c2 where c2.CD_ID=concat(substr(c.PRNTS_CD_ID,1,3),'0000')) prntsCdNm
+		from cd c
+		where c.CD_ID like #{type }
+		and c.CD_DSTNCT in( '학과', '연구분야');
+		]]>
+	</select>
+
+
+		<!-- 정예린  -->
+	<select id="selectStudyList" resultType="codeVo">
+		<![CDATA[
+			select lab.cdId,lab.cdDstnct,lab.cdNm, lab.engCodeNm engCodeNm, lab.labIngCount, lab.labEndCount, grad.gradIngCount, grad.gradEndCount
+			from (select c.cd_id cdId, c.cd_nm cdNm, replace(replace(c.ENG_CODE_NM,' ',''),',','') engCodeNm,  ifnull(c1.cing,0) labIngCount, ifnull(c2.cend,0) labEndCount, c.cd_dstnct cdDstnct
+					from  (select c.cdNm cdNm, count(*) cing
+							from (select noti.noti_no notiNo, noti.orgnz_no orgnzNo, noti.noti_dstnct notiDstnct, (select cd_nm from cd where cd_id = concat(substr(c.cd_id,1,1),'000000')) cdNm
+							from (select SLCTN_NOTI_NO noti_no, ORGNZ_NO orgnz_no, SLCTN_NOTI_DSTNCT noti_dstnct, PCHRG_YN pchrgYn,slctn_end_dt slctnEndDt ,slctn_begin_dt slctnBeginDt
+      						from slctn_noti) noti, cd c, slctn_noti_info noti_cd
+					where noti.noti_no = noti_cd.SLCTN_NOTI_NO
+					and noti_cd.cd_id = c.cd_id
+					and noti.noti_dstnct='연구실'
+					and noti.pchrgYn='Y'
+					and to_days(noti.slctnEndDt)-to_days(sysdate()) >= 0 
+					and (to_days(noti.slctnEndDt)-to_days(noti.slctnBeginDt))-(to_days(noti.slctnEndDt)-to_days(sysdate())) >= 0
+					group by notiNo, cdNm) c 
+					group by  c.cdNm) c1 right outer join cd c on (c.cd_nm=c1.cdNm) left outer join 
+				(select c.cdNm cdNm, count(*) cend
+					from (select noti.noti_no notiNo, noti.orgnz_no orgnzNo, noti.noti_dstnct notiDstnct, (select cd_nm from cd where cd_id = concat(substr(c.cd_id,1,1),'000000')) cdNm
+							from (select SLCTN_NOTI_NO noti_no, ORGNZ_NO orgnz_no, SLCTN_NOTI_DSTNCT noti_dstnct, PCHRG_YN pchrgYn,slctn_end_dt slctnEndDt ,slctn_begin_dt slctnBeginDt
+      								from slctn_noti) noti, cd c, slctn_noti_info noti_cd
+									where noti.noti_no = noti_cd.SLCTN_NOTI_NO
+									and noti_cd.cd_id = c.cd_id
+									and noti.noti_dstnct='연구실'
+									and noti.pchrgYn='Y'
+									and to_days(noti.slctnEndDt)-to_days(sysdate()) < 0
+									group by notiNo, cdNm) c 
+						group by  c.cdNm)c2 on (c.cd_Nm=c2.cdNm)
+						where cd_dstnct='학문') lab, (	select c.cd_id cdId, c.cd_nm cdNm, ifnull(c1.cing,0) gradIngCount, ifnull(c2.cend,0) gradEndCount, c.cd_dstnct cdDstnct
+				from  (select c.cd_nm cdNm, count(*) cing
+				from slctn_noti s, organz o, SLCTN_NOTI_info i, cd c
+				where s.orgnz_no = o.orgnz_no
+				and S.SLCTN_NOTI_NO=i.SLCTN_NOTI_NO
+				and i.cd_id=c.cd_id
+				and SLCTN_NOTI_DSTNCT='대학원'
+				and s.pchrg_yn='Y'
+				and to_days(s.slctn_end_dt)-to_days(sysdate()) >= 0 
+				and (to_days(s.slctn_end_dt)-to_days(s.slctn_begin_dt))-(to_days(s.slctn_end_dt)-to_days(sysdate())) >=0
+				group by  c.cd_nm) c1 right outer join cd c on (c.cd_nm=c1.cdNm) left outer join 
+				(select c.cd_nm cdNm, count(*) cend
+				from slctn_noti s, organz o, SLCTN_NOTI_info i, cd c
+				where s.orgnz_no = o.orgnz_no
+				and S.SLCTN_NOTI_NO=i.SLCTN_NOTI_NO
+				and i.cd_id=c.cd_id
+				and SLCTN_NOTI_DSTNCT='대학원'
+				and s.pchrg_yn='Y'
+				and to_days(s.slctn_end_dt)-to_days(sysdate()) < 0 
+				group by  c.cd_nm)c2 on (c.cd_Nm=c2.cdNm)
+			where cd_dstnct='학문') grad
+			where lab.cdNm=grad.cdNm
+		]]>
+	</select>
+
+
+</mapper>

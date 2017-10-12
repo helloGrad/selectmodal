@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="noti">
+
+	<!-- 허규준 -->
+		<select id="getNotiList" resultType="notiVo" parameterType="string">
+			<![CDATA[
+			select SLCTN_NOTI_NO slctnNotiNo, ADMIN_NO adminNo, ORGNZ_NO orgnzNo, SLCTN_NOTI_DSTNCT slctnNotiDstnct, SLCTN_TITLE slctnTitle
+			from slctn_noti
+			where SLCTN_NOTI_DSTNCT like concat('%',#{type},'%');
+			
+			]]>
+		</select>
+	
+		<select id="getNotiListByPage" resultType="notiVo" parameterType="map">
+			<![CDATA[
+			select SLCTN_NOTI_NO slctnNotiNo, ADMIN_NO adminNo, ORGNZ_NO orgnzNo, SLCTN_NOTI_DSTNCT slctnNotiDstnct, SLCTN_TITLE slctnTitle
+			from slctn_noti
+			where SLCTN_NOTI_DSTNCT like concat('%',#{type},'%')
+			limit #{page},1;
+			]]>
+		</select>
+
+	<!-- 정예린 -->
+	<select id="getGradByNo" resultType="notiVo" parameterType="int">
+		<![CDATA[
+			select s.SLCTN_NOTI_NO slctnNotiNo, s.ADMIN_NO adminNo, s.ORGNZ_NO orgnzNo, o.addr addr, s.SLCTN_NOTI_DSTNCT slctnNotiDstnct, s.NOTI_REGST_DT notiRegstDt, 
+			date_format(s.SLCTN_BEGIN_DT ,'%Y/%m/%d') slctnBeginDt, date_format(s.SLCTN_END_DT,'%Y/%m/%d') slctnEndDt, o.orgnz_full_nm orgnzFullNm,S.SLCTN_YYCL slctnYycl, S.SLCTN_SEMSTR slctnSemstr,
+			s.SLCTN_TITLE slctnTitle, s.SLCTN_TEXT slctnText,s.SUPRT_QUALF suprtQualf, s.SLCTN_NOPS slctnNops, s.SLSN_MTH slsnMth,
+			s.SBMT_DOC_TEXT sbmtDocText, s.CHRGR_DSTNCT chrgrDstnct,s.CHRGR_NM chrgrNm,s.CHRGR_TEL_NO chrgrTelNo,s.CHRGR_EMAIL chrgrEmail, s.SLCTN_NOTI_URL slctnNotiUrl, s.RCP_MTH rcpMth, date_format(s.SLSN_BEGIN_DD,'%Y/%m/%d') slsnBeginDd, date_format(s.SLSN_END_DD,'%Y/%m/%d') slsnEndDd,
+			s.SLSN_PLAC slsnPlac,date_format(s.SCCN_ANCM_DD,'%Y/%m/%d') sccnAncmDd,s.SCCN_ANCM_MTH sccnAncmMth,date_format(s.REGST_BEGIN_DD,'%Y/%m/%d') regstBeginDd,date_format(s.REGST_END_DD,'%Y/%m/%d') regstEndDd,s.REGST_MTH regstMth,
+			(select count(*) from mb_scrap_info where prnts_dstnct='모집공고' and prnts_no=s.SLCTN_NOTI_NO) scrapNum,
+			CASE 
+			WHEN (select count(*) from mb_scrap_info where prnts_dstnct='모집공고' and prnts_no=s.SLCTN_NOTI_NO and mb_no=#{userid })=0  THEN 'N'   
+			WHEN (select count(*) from mb_scrap_info where prnts_dstnct='모집공고' and prnts_no=s.SLCTN_NOTI_NO and mb_no=#{userid })=1 THEN 'Y' 
+			ELSE '-1'
+			END scrapYn, o.symbol_color_nm symbolColorNm
+			from slctn_noti s, organz o
+			where s.ORGNZ_NO=o.ORGNZ_NO
+			and s.SLCTN_NOTI_NO=#{no }
+		]]>
+		
+	</select>
+
+	<!-- 박가혜 -->
+	<select id="getLabByNo" resultType="notiVo" parameterType="int">
+			<![CDATA[
+			select s.SLCTN_NOTI_NO slctnNotiNo, s.ADMIN_NO adminNo, s.ORGNZ_NO orgnzNo, o.addr addr, s.SLCTN_NOTI_DSTNCT slctnNotiDstnct, s.NOTI_REGST_DT notiRegstDt, 
+			date_format(s.SLCTN_BEGIN_DT ,'%Y/%m/%d') slctnBeginDt, date_format(s.SLCTN_END_DT,'%Y/%m/%d') slctnEndDt, o.orgnz_full_nm orgnzFullNm,S.SLCTN_YYCL slctnYycl, S.SLCTN_SEMSTR slctnSemstr,
+			s.SLCTN_TITLE slctnTitle, s.SLCTN_TEXT slctnText,s.SUPRT_QUALF suprtQualf, s.SLCTN_NOPS slctnNops, s.SLSN_MTH slsnMth,
+			s.SBMT_DOC_TEXT sbmtDocText, s.CHRGR_DSTNCT chrgrDstnct,
+			s.TUITION_SUPRT_YN tuitionSuprtYn, s.LVNC_SUPRT_YN lvncSuprtYn, s.BK21_EORGNZ_SUPRT_YN bk21EorgnzSuprtYn, s.INCET_SUPRT_YN incetSuprtYn, s.LRSTY_JOINGFEE_SUPRT_YN lrstyJoingfeeSuprtYn,
+			s.DORM_SUPRT_YN dormSuprtYn, s.INTERN_YN internYn, s.LRSTY_JOING_YN lrstyJoingYn, s.RESRCH_TASK_JOING_YN resrchTaskJoingYn, s.STDTR_OPPTY_SUPRT_YN stdtrOpptySuprtYn,
+			s.EDU_PGM_JOING_SUPRT_YN eduPgmJoingSuprtYn, s.SUPRT_FVR_TEXT suprtFvrText,
+			s.CHRGR_NM chrgrNm,s.CHRGR_TEL_NO chrgrTelNo,s.CHRGR_EMAIL chrgrEmail,
+			s.SUPRT_QUALF suprtQualf, s.ONLINE_SUPRT_YN onlineSuprtYn, s.PRMRY_RESRCH_FIELD prmryResrchField,
+			(select count(*) from mb_scrap_info where prnts_dstnct='모집공고' and prnts_no=s.SLCTN_NOTI_NO) scrapNum,
+			CASE 
+			WHEN (select count(*) from mb_scrap_info where prnts_dstnct='모집공고' and prnts_no=s.SLCTN_NOTI_NO and mb_no=#{userid })=0  THEN 'N'   
+			WHEN (select count(*) from mb_scrap_info where prnts_dstnct='모집공고' and prnts_no=s.SLCTN_NOTI_NO and mb_no=#{userid })=1 THEN 'Y' 
+			ELSE '-1'
+			END scrapYn
+			from slctn_noti s, organz o
+			where s.ORGNZ_NO=o.ORGNZ_NO
+			and s.SLCTN_NOTI_NO=#{no }
+		]]>
+
+	</select>
+	
+	<!-- 정예린 -->
+	<select id="getLabByNo2" resultType="notiVo" parameterType="map">
+		<![CDATA[
+			    select sn.대학교 university, sn.대학원 graduate, sn.학과 major,sn.연구실 lab, sn.slctn_noti_no slctnNotiNo, sn.symbol_color_nm symbolColorNm, sn.slctn_noti_dstnct slctnNotiDstnct, sn.noti_regst_dt notiRegstDt
+			,date_format(sn.slctn_begin_dt ,'%Y/%m/%d') slctnBeginDt, date_format(sn.slctn_end_dt ,'%Y/%m/%d') slctnEndDt,sn.dday dday, sn.totaldays totaldays,sn.percent percent, sn.slctnTitle slctnTitle,sn.slctnYycl slctnYycl, sn.slctnSemstr slctnSemstr, sn.pchrgYn pchrgYn,af.STORG_PATH storgPath
+			,sn.adminNo adminNo, sn.orgnzNo orgnzNo,
+			sn.slctnText slctnText,sn.suprtQualf suprtQualf, sn.slctnNops slctnNops, sn.slsnMth slsnMth,
+			sn.sbmtDocText sbmtDocText, sn.chrgrDstnct chrgrDstnct,
+			sn.tuitionSuprtYn tuitionSuprtYn, sn.lvncSuprtYn lvncSuprtYn, sn.bk21EorgnzSuprtYn bk21EorgnzSuprtYn, sn.incetSuprtYn incetSuprtYn, sn.lrstyJoingfeeSuprtYn lrstyJoingfeeSuprtYn,
+			sn.dormSuprtYn dormSuprtYn, sn.internYn internYn, sn.lrstyJoingYn lrstyJoingYn, sn.resrchTaskJoingYn resrchTaskJoingYn, sn.stdtrOpptySuprtYn stdtrOpptySuprtYn,
+			sn.eduPgmJoingSuprtYn eduPgmJoingSuprtYn, sn.suprtFvrText suprtFvrText, sn.mapProfNm mapProfNm, sn.addr addr,
+			sn.chrgrNm chrgrNm,sn.chrgrTelNo chrgrTelNo,sn.chrgrEmail chrgrEmail,
+			sn.onlineSuprtYn onlineSuprtYn, sn.prmryResrchField prmryResrchField,
+            (select count(*) from mb_scrap_info where prnts_dstnct='모집공고' and prnts_no=sn.slctn_noti_no) scrapNum,
+			CASE 
+			WHEN (select count(*) from mb_scrap_info where prnts_dstnct='모집공고' and prnts_no=sn.slctn_noti_no and mb_no=#{userid})=0  THEN 'N'   
+			WHEN (select count(*) from mb_scrap_info where prnts_dstnct='모집공고' and prnts_no=sn.slctn_noti_no and mb_no=#{userid})=1 THEN 'Y' 
+			ELSE '-1' END scrapYn
+			from
+			(select p3.orgnz_nm '대학교', c3.*
+			from (select  p2.orgnz_nm '대학원', p2.PRNTS_ORGNZ_NO pno3, c2.*
+			from (select p.orgnz_nm '학과', p.PRNTS_ORGNZ_NO pno2, c.*
+			from (select o.ORGNZ_NM '연구실', o.PRNTS_ORGNZ_NO pno1, sn.SLCTN_NOTI_NO, o.SYMBOL_COLOR_NM, sn.SLCTN_NOTI_DSTNCT,sn.NOTI_REGST_DT, 
+			sn.SLCTN_BEGIN_DT, sn.SLCTN_END_DT ,TO_DAYS(sn.SLCTN_END_DT) - TO_DAYS(now()) "dday",TO_DAYS(now()) - TO_DAYS(sn.SLCTN_BEGIN_DT) "현재날짜-시작일", 
+			TO_DAYS(sn.SLCTN_END_DT) - TO_DAYS(sn.SLCTN_BEGIN_DT) "totaldays", TO_DAYS(now()) - TO_DAYS(sn.SLCTN_BEGIN_DT)/TO_DAYS(sn.SLCTN_END_DT) - TO_DAYS(sn.SLCTN_BEGIN_DT) "percent",
+			sn.SLCTN_TITLE slctnTitle,sn.SLCTN_YYCL slctnYycl,sn.SLCTN_SEMSTR slctnSemstr, sn.PCHRG_YN pchrgYn
+			,sn.ADMIN_NO adminNo, sn.ORGNZ_NO orgnzNo, 
+			sn.SLCTN_TEXT slctnText,sn.SUPRT_QUALF suprtQualf, sn.SLCTN_NOPS slctnNops, sn.SLSN_MTH slsnMth,
+			sn.SBMT_DOC_TEXT sbmtDocText, sn.CHRGR_DSTNCT chrgrDstnct,
+			sn.TUITION_SUPRT_YN tuitionSuprtYn, sn.LVNC_SUPRT_YN lvncSuprtYn, sn.BK21_EORGNZ_SUPRT_YN bk21EorgnzSuprtYn, sn.INCET_SUPRT_YN incetSuprtYn, sn.LRSTY_JOINGFEE_SUPRT_YN lrstyJoingfeeSuprtYn,
+			sn.DORM_SUPRT_YN dormSuprtYn, sn.INTERN_YN internYn, sn.LRSTY_JOING_YN lrstyJoingYn, sn.RESRCH_TASK_JOING_YN resrchTaskJoingYn, sn.STDTR_OPPTY_SUPRT_YN stdtrOpptySuprtYn,
+			sn.EDU_PGM_JOING_SUPRT_YN eduPgmJoingSuprtYn, sn.SUPRT_FVR_TEXT suprtFvrText,
+			sn.CHRGR_NM chrgrNm,sn.CHRGR_TEL_NO chrgrTelNo,sn.CHRGR_EMAIL chrgrEmail, 
+			sn.ONLINE_SUPRT_YN onlineSuprtYn, sn.PRMRY_RESRCH_FIELD prmryResrchField, o.MAP_PROF_NM mapProfNm, o.addr addr
+			from organz o, slctn_Noti sn
+			where o.ORGNZ_NO = sn.ORGNZ_NO) c left outer join organz p 
+			on c.pno1 = p.ORGNZ_NO) c2 left outer join organz p2 
+			on c2.pno2 = p2.ORGNZ_NO) c3 left outer join organz p3
+			on c3.pno3 = p3.ORGNZ_NO ) sn LEFT JOIN apndng_file af
+			on sn.SLCTN_NOTI_NO = af.PRNTS_NO
+			where sn.SLCTN_NOTI_NO=#{no}
+		]]>
+
+	</select>
+
+	<!-- 정예린 -->
+	<insert id="insertNoti" parameterType="map">
+		<![CDATA[
+			 insert into slctn_noti (SLCTN_NOTI_NO, ADMIN_NO, ORGNZ_NO, NOTI_REGST_DT, SLCTN_BEGIN_DT, SLCTN_END_DT, SLCTN_TITLE, SLCTN_TEXT,SUPRT_QUALF, SLCTN_NOPS, SLSN_MTH,
+			SBMT_DOC_TEXT, CHRGR_DSTNCT,CHRGR_NM,CHRGR_TEL_NO,CHRGR_EMAIL, SLCTN_NOTI_DSTNCT,
+		]]>
+		<choose>
+			<when test="tabnm =='grad'">
+				<![CDATA[
+					SLCTN_NOTI_URL, RCP_MTH,SLSN_BEGIN_DD,SLSN_END_DD,SLSN_PLAC,SCCN_ANCM_DD,SCCN_ANCM_MTH,REGST_BEGIN_DD,REGST_END_DD,REGST_MTH)
+				]]>
+			</when>
+			<when test="tabnm =='lab'">
+				<![CDATA[
+					TUITION_SUPRT_YN,LVNC_SUPRT_YN,BK21_EORGNZ_SUPRT_YN,INCET_SUPRT_YN,LRSTY_JOINGFEE_SUPRT_YN,DORM_SUPRT_YN,INTERN_YN,
+					LRSTY_JOING_YN,RESRCH_TASK_JOING_YN,STDTR_OPPTY_SUPRT_YN,EDU_PGM_JOING_SUPRT_YN,SUPRT_FVR_TEXT,ONLINE_SUPRT_YN,PRMRY_RESRCH_FIELD)
+				]]>
+			</when>
+		</choose>
+		<![CDATA[
+	 		values (null,10,#{notiVo.orgnzNo },now(),#{notiVo.slctnBeginDt },#{notiVo.slctnEndDt },
+			#{notiVo.slctnTitle }, #{notiVo.slctnText },#{notiVo.suprtQualf },#{notiVo.slctnNops },#{notiVo.slsnMth },#{notiVo.sbmtDocText },
+			'비회원',#{notiVo.chrgrNm },#{notiVo.chrgrTelNo },#{notiVo.chrgrEmail },		
+		]]>
+		<choose>
+			<when test="tabnm =='grad'">
+				<![CDATA[
+					'대학원',#{notiVo.slctnNotiUrl },#{notiVo.rcpMth },#{notiVo.slsnBeginDd },#{notiVo.slsnEndDd },#{notiVo.slsnPlac },#{notiVo.sccnAncmDd },
+					#{notiVo.sccnAncmMth },#{notiVo.regstBeginDd },#{notiVo.regstEndDd },#{notiVo.regstMth })
+				]]>
+			</when>
+			<when test="tabnm =='lab'">
+				<![CDATA[
+					'연구실',ifnull(#{notiVo.tuitionSuprtYn },'N'),ifnull(#{notiVo.lvncSuprtYn },'N'),ifnull(#{notiVo.bk21EorgnzSuprtYn },'N'),
+					ifnull(#{notiVo.incetSuprtYn },'N'),ifnull(#{notiVo.lrstyJoingfeeSuprtYn },'N'),ifnull(#{notiVo.dormSuprtYn },'N'),
+					ifnull(#{notiVo.internYn },'N'),ifnull(#{notiVo.lrstyJoingYn },'N'),ifnull(#{notiVo.resrchTaskJoingYn },'N'),
+					ifnull(#{notiVo.stdtrOpptySuprtYn },'N'),ifnull(#{notiVo.eduPgmJoingSuprtYn },'N'),#{notiVo.suprtFvrText },ifnull(#{notiVo.onlineSuprtYn },'N'),#{notiVo.prmryResrchField })
+				]]>
+			</when>
+		</choose>
+	</insert>
+	
+	
+	
+			<!-- 정예린  -->
+		<select id="getGradNotiList" resultType="studyVo">
+			<![CDATA[
+			select sn.university university, sn.graduate graduate, sn.major major, sn.lab lab, sn.slctnNotiNo slctnNotiNo, sn.symbolColorNm symbolColorNm, sn.slctnNotiDstnct slctnNotiDstnct, sn.notiRegstDt notiRegstDt
+			,sn.slctnBeginDt slctnBeginDt, sn.slctnEndDt slctnEndDt,sn.dday dday, sn.totaldays totaldays,sn.percent percent, sn.slctnTitle slctnTitle,sn.slctnYycl slctnYycl, sn.slctnSemstr slctnSemstr, sn.pchrgYn pchrgYn,sn.storgPath storgPath, 
+			cd.cdNm pNm
+			from (select sn.대학교 university, sn.대학원 graduate, sn.학과 major,sn.연구실 lab, sn.slctn_noti_no slctnNotiNo, sn.symbol_color_nm symbolColorNm, sn.slctn_noti_dstnct slctnNotiDstnct, sn.noti_regst_dt notiRegstDt
+			,sn.slctn_begin_dt slctnBeginDt, sn.slctn_end_dt slctnEndDt,sn.dday dday,sn.totaldays totaldays, sn.percent percent, sn.slctnTitle slctnTitle,sn.slctnYycl slctnYycl, sn.slctnSemstr slctnSemstr, sn.pchrgYn pchrgYn,af.STORG_PATH storgPath
+			from
+			(select p3.orgnz_nm '대학교', c3.*
+			from (select  p2.orgnz_nm '대학원', p2.PRNTS_ORGNZ_NO pno3, c2.*
+			from (select p.orgnz_nm '학과', p.PRNTS_ORGNZ_NO pno2, c.*
+			from (select o.ORGNZ_NM '연구실', o.PRNTS_ORGNZ_NO pno1, sn.SLCTN_NOTI_NO, o.SYMBOL_COLOR_NM, sn.SLCTN_NOTI_DSTNCT,sn.NOTI_REGST_DT, 
+			sn.SLCTN_BEGIN_DT, sn.SLCTN_END_DT ,TO_DAYS(sn.SLCTN_END_DT) - TO_DAYS(now()) "dday",TO_DAYS(now()) - TO_DAYS(sn.SLCTN_BEGIN_DT) "현재날짜-시작일", 
+			TO_DAYS(sn.SLCTN_END_DT) - TO_DAYS(sn.SLCTN_BEGIN_DT) "totaldays",  round(((TO_DAYS(now()) - TO_DAYS(sn.SLCTN_BEGIN_DT))/(TO_DAYS(sn.SLCTN_END_DT) - TO_DAYS(sn.SLCTN_BEGIN_DT))*100),3) "percent",
+			sn.SLCTN_TITLE slctnTitle,sn.SLCTN_YYCL slctnYycl,sn.SLCTN_SEMSTR slctnSemstr, sn.PCHRG_YN pchrgYn
+			from organz o, slctn_Noti sn
+			where o.ORGNZ_NO = sn.ORGNZ_NO) c left outer join organz p 
+			on c.pno1 = p.ORGNZ_NO) c2 left outer join organz p2 
+			on c2.pno2 = p2.ORGNZ_NO) c3 left outer join organz p3
+			on c3.pno3 = p3.ORGNZ_NO )sn LEFT JOIN apndng_file af
+			on sn.SLCTN_NOTI_NO = af.PRNTS_NO
+			where sn.pchrgYn='y'
+			and sn.slctn_noti_dstnct='대학원') sn, (select noti.noti_no notiNo, noti.orgnz_no orgnzNo, noti.noti_dstnct notiDstnct, c.CD_NM cdNm, (select cd_nm from cd where cd_id = concat(substr(c.cd_id,1,1),'000000')) pnm
+			from (select SLCTN_NOTI_NO noti_no, ORGNZ_NO orgnz_no, SLCTN_NOTI_DSTNCT noti_dstnct
+   	   		from slctn_noti) noti, cd c, slctn_noti_info noti_cd
+			where noti.noti_no = noti_cd.SLCTN_NOTI_NO
+			and noti_cd.cd_id = c.cd_id
+			and noti.noti_dstnct='대학원') cd
+			where sn.slctnNotiNo=cd.notiNo;		
+		]]>
+		</select>
+		
+	<!-- 정예린 -->
+	<select id="getLabNotiList" resultType="studyVo">
+			<![CDATA[
+			select sn.university university, sn.graduate graduate, sn.major major, sn.lab lab, sn.slctnNotiNo slctnNotiNo, sn.symbolColorNm symbolColorNm, sn.slctnNotiDstnct slctnNotiDstnct, sn.notiRegstDt notiRegstDt
+			,sn.slctnBeginDt slctnBeginDt, sn.slctnEndDt slctnEndDt,sn.dday dday, sn.totaldays totaldays,sn.percent percent, sn.slctnTitle slctnTitle,sn.slctnYycl slctnYycl, sn.slctnSemstr slctnSemstr, sn.pchrgYn pchrgYn,sn.storgPath storgPath, 
+			cd.pNm pNm,sn.bk21EorgnzSuprtYn bk21EorgnzSuprtYn
+			from (select sn.대학교 university, sn.대학원 graduate, sn.학과 major,sn.연구실 lab, sn.slctn_noti_no slctnNotiNo, sn.symbol_color_nm symbolColorNm, sn.slctn_noti_dstnct slctnNotiDstnct, sn.noti_regst_dt notiRegstDt
+			,sn.slctn_begin_dt slctnBeginDt, sn.slctn_end_dt slctnEndDt,sn.dday dday, sn.totaldays totaldays,sn.percent percent, sn.slctnTitle slctnTitle,sn.slctnYycl slctnYycl, sn.slctnSemstr slctnSemstr, sn.pchrgYn pchrgYn,af.STORG_PATH storgPath
+            ,sn.bk21EorgnzSuprtYn bk21EorgnzSuprtYn
+			from
+			(select p3.orgnz_nm '대학교', c3.*
+			from (select  p2.orgnz_nm '대학원', p2.PRNTS_ORGNZ_NO pno3, c2.*
+			from (select p.orgnz_nm '학과', p.PRNTS_ORGNZ_NO pno2, c.*
+			from (select o.ORGNZ_NM '연구실', o.PRNTS_ORGNZ_NO pno1, sn.SLCTN_NOTI_NO, o.SYMBOL_COLOR_NM, sn.SLCTN_NOTI_DSTNCT,sn.NOTI_REGST_DT, 
+			sn.SLCTN_BEGIN_DT, sn.SLCTN_END_DT ,TO_DAYS(sn.SLCTN_END_DT) - TO_DAYS(now()) "dday",TO_DAYS(now()) - TO_DAYS(sn.SLCTN_BEGIN_DT) "현재날짜-시작일", 
+			TO_DAYS(sn.SLCTN_END_DT) - TO_DAYS(sn.SLCTN_BEGIN_DT) "totaldays", round(((TO_DAYS(now()) - TO_DAYS(sn.SLCTN_BEGIN_DT))/(TO_DAYS(sn.SLCTN_END_DT) - TO_DAYS(sn.SLCTN_BEGIN_DT))*100),3) "percent",
+			sn.SLCTN_TITLE slctnTitle,sn.SLCTN_YYCL slctnYycl,sn.SLCTN_SEMSTR slctnSemstr, sn.PCHRG_YN pchrgYn, sn.BK21_EORGNZ_SUPRT_YN bk21EorgnzSuprtYn
+			from organz o, slctn_Noti sn
+			where o.ORGNZ_NO = sn.ORGNZ_NO) c left outer join organz p 
+			on c.pno1 = p.ORGNZ_NO) c2 left outer join organz p2 
+			on c2.pno2 = p2.ORGNZ_NO) c3 left outer join organz p3
+			on c3.pno3 = p3.ORGNZ_NO )sn LEFT JOIN apndng_file af
+			on sn.SLCTN_NOTI_NO = af.PRNTS_NO
+			where sn.pchrgYn='y'
+			and sn.slctn_noti_dstnct='연구실') sn, (select noti.noti_no notiNo, noti.orgnz_no orgnzNo, noti.noti_dstnct notiDstnct, c.CD_NM cdNm, (select cd_nm from cd where cd_id = concat(substr(c.cd_id,1,1),'000000')) pnm
+			from (select SLCTN_NOTI_NO noti_no, ORGNZ_NO orgnz_no, SLCTN_NOTI_DSTNCT noti_dstnct
+      		from slctn_noti) noti, cd c, slctn_noti_info noti_cd
+			where noti.noti_no = noti_cd.SLCTN_NOTI_NO
+			and noti_cd.cd_id = c.cd_id
+			and noti.noti_dstnct='연구실') cd
+			where sn.slctnNotiNo=cd.notiNo
+			group by sn.lab, cd.pNm
+		]]>
+	</select>
+		
+		
+		<!-- 정예린  -->
+		<select id="getLabCodeList" resultType="studyVo">
+		<![CDATA[
+			select noti.noti_no slctnNotiNo, c.CD_NM cdNm
+			from (select SLCTN_NOTI_NO noti_no, ORGNZ_NO orgnz_no, SLCTN_NOTI_DSTNCT noti_dstnct
+      			from slctn_noti) noti, cd c, slctn_noti_info noti_cd
+			where noti.noti_no = noti_cd.SLCTN_NOTI_NO
+			and noti_cd.cd_id = c.cd_id
+			and noti.noti_dstnct='연구실'
+		]]>
+		</select>
+		
+		<select id="getLabCodeListByNo" resultType="studyVo">
+		<![CDATA[
+			select noti.noti_no slctnNotiNo, c.CD_NM cdNm
+			from (select SLCTN_NOTI_NO noti_no, ORGNZ_NO orgnz_no, SLCTN_NOTI_DSTNCT noti_dstnct
+      			from slctn_noti) noti, cd c, slctn_noti_info noti_cd
+			where noti.noti_no = noti_cd.SLCTN_NOTI_NO
+			and noti_cd.cd_id = c.cd_id
+			and noti.noti_dstnct='연구실'
+			and noti.noti_no=#{no}
+		]]>
+		</select>
+		
+			<!-- 정예린 -->
+	<select id="getNotiCount" resultType="int">
+		select count(c.SLCTN_NOTI_NO) notiCount
+		from (select s.SLCTN_NOTI_NO SLCTN_NOTI_NO
+		from slctn_noti s, slctn_noti_info i
+		where s.slctn_noti_no = i.SLCTN_NOTI_NO
+		and pchrg_yn='y'
+		and to_days(s.slctn_End_Dt)-to_days(sysdate()) >= 0 
+		and (to_days(s.slctn_End_Dt)-to_days(s.slctn_Begin_Dt)) >= (to_days(s.slctn_End_Dt)-to_days(sysdate())) 
+		group by s.SLCTN_NOTI_NO, substr(cd_id,1,1)) c
+	</select>
+
+</mapper>

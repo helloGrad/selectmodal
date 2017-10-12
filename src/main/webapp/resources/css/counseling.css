@@ -1,0 +1,155 @@
+.remove-btn {
+	float : right;
+}
+
+.info {
+	border-top: 1px solid lightgray;
+}
+.interest {
+	color : gray;
+}
+.option {
+	float : right;
+}
+a:visited { 
+	color: gray; 
+	text-decoration: none;
+}
+
+
+textarea {
+		width:300px; 
+		overflow:visible;
+} 
+textarea.autosize { 
+	min-height: 210px; 
+}
+
+.close:hover, .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.postMetaHeader {
+    padding-top: 35px;
+}
+
+
+.avatar-image {
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 100%;
+}
+
+.avatar-image--smaller {
+    width: 40px;
+    height: 40px;
+    margin : 20px 10px 0 20px;
+}
+
+img {
+    border: 0;
+}
+
+.u-flex1 {
+   
+    flex: 1 1 auto;
+}
+
+.writeimage{
+ 	float: left;
+}
+
+.writeName{
+	margin: 20px 0 0 10px;
+}
+
+.col-close:before { 
+	content: 'x'; 
+	margin:0 20px 0 0; 
+}
+
+textarea.wrtbtTitle::-webkit-input-placeholder {
+	font-size: 40px;
+	font-weight: bold;
+}
+     
+textarea.wrtbtTitle {
+	font-size: 40px;
+	font-weight: bold;
+	outline:none;
+}
+
+textarea.wrtbtText::-webkit-input-placeholder {
+	font-size: 21px;
+	font-weight: bold;
+}
+     
+textarea.wrtbtText {
+	font-size: 21px;
+    outline:none;
+}
+
+textarea.wrtbtText:focus { 
+	border: 0 none #FFF;
+    overflow: hidden;
+    outline: none;
+}
+
+.writedropdown {
+	float : right;
+	margin: 15px 3px 0 0;
+}
+
+.modal {
+	display: none; 
+	position: fixed;
+	padding-top: 130px;
+	z-index: 1; 
+	left: 0;
+	top: 0;
+	width: 100%; 
+	height: 100%; 
+	overflow: auto; 
+	background-color: rgb(0, 0, 0); 
+	background-color: rgba(0, 0, 0, 0.4); 
+}
+
+.modal-body{
+    max-height: calc(100vh - 210px);
+    overflow-y: auto;
+    max-height: 100%;
+    overflow: auto;
+}
+
+
+input1[type='radio'] {
+   display: none;
+}
+
+.objectbutton1, .objectbutton2 {
+	width: 6em;
+	height: 10%;
+	display: inline-block;
+	border: 1px solid #ccc;
+	margin: 10px 0 10px 0;
+	font-weight: normal;
+	font-size: 1em;
+	text-align: center;
+}
+
+.on {
+	border :  1px solid #000000;
+}
+
+.ulhide{
+	display:none;  
+}
+
+#writeright, #writeleft{
+	padding: 0 0 0 0;
+}
+
+
+

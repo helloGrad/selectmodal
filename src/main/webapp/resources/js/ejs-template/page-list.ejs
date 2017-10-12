@@ -1,0 +1,53 @@
+<% if(pageVo.page<5) { %>
+				<a  class="btn btn-default disabled"
+								href="#" onclick="pageList('<%=type%>','<%=order%>',<%=pageVo.startPage-5%>);">&lt;&lt;</a>
+								
+<% } else { %>
+		<a class="btn btn-default"
+								href="#" onclick="pageList('<%=type%>','<%=order%>',<%=pageVo.startPage-5%>);">&lt;&lt;</a>
+<% } 
+		if(pageVo.page == 1) { %>
+		
+		<a  class="btn btn-default disabled"
+								href="#" onclick="pageList('<%=type%>','<%=order%>',<%=pageVo.page-1%>);">&lt;</a>
+<% }
+		else { %>
+						<a  class="btn btn-default"
+								href="#" onclick="pageList('<%=type%>','<%=order%>',<%=pageVo.page-1%>);">&lt;</a>
+								
+<%  }  for(i=pageVo.startPage; i<=pageVo.endPage ; i++) { 
+					if(pageVo.page==i) {%>
+						<a  class="btn btn-default disabled numbtn" href="#" 
+								onclick="pageList('<%=type%>','<%=order%>',<%=i%>);"><%=i%></a>
+					<% } else { %>
+					
+						<a  class="btn btn-default" href="#" 
+								onclick="pageList('<%=type%>','<%=order%>',<%=i%>);" ><%=i %></a>
+								
+<% 						}
+		} 
+		
+		if(pageVo.page==pageVo.totalPage) {%>
+			<a  class="btn btn-default disabled"
+								href="#" 
+								onclick="pageList('<%=type%>','<%=order%>',<%=pageVo.page+1%>);" >&gt;</a>
+								
+<%     }    else {  %>
+			<a  class="btn btn-default"
+							href="#" 
+								onclick="pageList('<%=type%>','<%=order%>',<%=pageVo.page+1%>);">&gt;</a>
+								
+								
+<%  }   if(pageVo.endPage >= pageVo.totalPage) { %>
+				<a class="btn btn-default disabled"
+								href="#" 
+								onclick="pageList('<%=type%>','<%=order%>',<%=pageVo.startPage+5%>);">&gt;&gt;</a>
+								
+<%  }  else {  %>
+			<a  class="btn btn-default"
+						href="#" 
+					onclick="pageList('<%=type%>','<%=order%>',<%=pageVo.startPage+5%>);">&gt;&gt;</a>
+					
+					
+<% } %>
+		

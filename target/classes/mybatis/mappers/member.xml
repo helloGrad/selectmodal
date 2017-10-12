@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="member">
+
+	<!-- 정예린 박가혜 -->
+
+	<insert id="insert" parameterType="memberVo">
+		<![CDATA[	
+			insert into MB (MB_NO, MB_DSTNCT, GENAL_MB_DSTNCT, NKNM, IDEN, PW, SEX, BIRDT, MYSELF_AUTHZ_YN, INSRD_DD, WTHDR_DD,INFO_YN )
+			values (null, '일반회원','일반가입',#{nknm },#{iden },password(#{pw }),#{sex },#{birdt },'N',date_format(now(),'%Y%m%d'),'99991231', 'N')
+		]]>
+	</insert>
+
+	<insert id="snsinsert" parameterType="map">
+		<![CDATA[
+			insert into MB (MB_NO, MB_DSTNCT, MB_NM, NKNM, IDEN, SEX, MYSELF_AUTHZ_YN, INSRD_DD, WTHDR_DD, GENAL_MB_DSTNCT, SNS_TKN_VALUE, INFO_YN, SNS_DSTNCT
+		]]>
+		<choose>
+			<when test="snsnm =='fb'">
+				<![CDATA[
+					, BIRDT)
+				]]>
+			</when>
+			<when test="snsnm =='naver'">
+				<![CDATA[
+					, AGRG)  
+				]]>
+			</when>
+		</choose>
+		
+	<![CDATA[
+	 		values (null,'일반회원', #{memberVo.mbNm }, #{memberVo.nknm }, #{memberVo.iden }, #{memberVo.sex },'Y',date_format(now(),'%Y%m%d'),'99991231','SNS가입', #{memberVo.snsTknValue },'N',		
+		]]>
+		
+		<choose>
+			<when test="snsnm =='fb'">
+				<![CDATA[
+					'페이스북', #{memberVo.birdt })
+				]]>
+			</when>
+			<when test="snsnm =='naver'">
+				<![CDATA[
+					'네이버', #{memberVo.agrg })
+				]]>
+			</when>
+		</choose>
+	</insert>
+
+
+	<select id="getByToken" parameterType="memberVo" resultType="memberVo">
+	<![CDATA[
+		select * 
+		from MB 
+		where SNS_TKN_VALUE='${snsTknValue }'		
+	]]>
+	</select>
+
+	<select id="getByIden" parameterType="string" resultType="memberVo">
+	<![CDATA[
+	
+		select * 
+		from MB 
+		where IDEN=#{iden }		
+	]]>
+	</select>
+
+	<select id="getByLoginInfo" parameterType="map" resultType="memberVo">  
+		<![CDATA[
+		select MB_NO as "mbNo",IDEN as "iden",MB_DSTNCT as "mbDstnct",NKNM as "nknm",INFO_YN infoYn,TRUNCATE(date_format(now(),"%Y-%m-%d %H:%i::%s")-date_format(BIRDT,"%Y-%m-%d %H:%i::%s"), -1) birdt, substr(AGRG,1,2) agrg
+		from mb 
+		where IDEN=#{iden } 
+		and PW=password(#{pw })
+		]]>
+	</select>
+
+	<select id="getByCode" parameterType="long" resultType="codeVo">  
+		<![CDATA[
+		select cd.CD_ID as "cdId",CD_NM as "cdNm",CD_DSTNCT as "cdDstnct"
+		from mb_info mi,CD 
+		where mi.CD_ID = CD.CD_ID 
+		and MB_NO =#{mbNo } 
+		]]>
+	</select>
+
+	<insert id="insertMbinfo" parameterType="map">
+	<![CDATA[
+		insert into mb_info values (#{mbNo }, #{information })
+	]]>
+	</insert>
+	
+	<delete id="deleteMbinfo" parameterType="long">
+	<![CDATA[	
+		delete from mb_info where MB_NO=#{mbNo }		
+	]]>
+	</delete>
+	
+	<!-- 박가혜 -->
+	
+	<select id="getBySns" parameterType="String" resultType="memberVo"> 
+		<![CDATA[
+		select MB_NO mbNo, MB_DSTNCT mbDstnct, MB_NM mbNm, NKNM nknm, IDEN iden, PW pw, SEX sex, MYSELF_AUTHZ_YN myselfAuthzYn, 
+		INSRD_DD insrdDd, WTHDR_DD wthdrDd, GENAL_MB_DSTNCT genalMbDstnct, SNS_TKN_VALUE snsTknValue, SNS_DSTNCT snsDstnct,INFO_YN infoYn,TRUNCATE(date_format(now(),"%Y-%m-%d %H:%i::%s")-date_format(BIRDT,"%Y-%m-%d %H:%i::%s"), -1) birdt, substr(AGRG,1,2) agrg
+		from mb 
+		where IDEN=#{iden } 
+		]]>
+	</select>
+	
+
+
+		<!-- 박가혜 -->
+
+	<update id="updateInfoYn" parameterType="Long">
+			<![CDATA[
+				update mb set INFO_YN='Y' where MB_NO=#{mbNo }
+			]]>
+			
+	</update>
+	
+		<!-- 정예린  -->
+	<insert id="insertScrap" parameterType="map"> 
+		<![CDATA[
+		 	insert into mb_scrap_info (mb_no,prnts_no,prnts_dstnct)
+			values (#{user},#{id},#{type});
+		]]>
+	</insert>
+
+	<!-- 정예린  -->
+	<delete id="deleteScrap" parameterType="map">
+	<![CDATA[	
+		delete from mb_scrap_info 
+		where MB_NO=#{user }
+		and prnts_no=#{id }
+		and prnts_dstnct=#{type };
+	]]>
+	</delete>
+
+	<select id="getScrapList" parameterType="Long" resultType="memberVo">
+		<![CDATA[	
+		select mb_no mbNo, prnts_no prntsNo, prnts_dstnct prntsDstnct
+		from mb_scrap_info
+		where mb_no=#{mbNo };
+		]]>
+	</select>
+	
+	
+		<!-- 정예린 -->
+	<select id="getBySnsToken" parameterType="String" resultType="memberVo"> 
+		<![CDATA[
+		select MB_NO mbNo, MB_DSTNCT mbDstnct, MB_NM mbNm, NKNM nknm, IDEN iden, PW pw, SEX sex, TRUNCATE(date_format(now(),"%Y-%m-%d %H:%i::%s")-date_format(BIRDT,"%Y-%m-%d %H:%i::%s"), -1) birdt, MYSELF_AUTHZ_YN myselfAuthzYn, 
+		INSRD_DD insrdDd, WTHDR_DD wthdrDd, GENAL_MB_DSTNCT genalMbDstnct, SNS_TKN_VALUE snsTknValue, SNS_DSTNCT snsDstnct,INFO_YN infoYn
+		from mb 
+		where SNS_TKN_VALUE=#{token } 
+		]]>
+	</select>
+	
+
+	
+	<!-- 허주한 -->
+	<select id="getInfoCodes" parameterType="long" resultType="codeVo">  
+		<![CDATA[
+		select ifnull(m.mb_no,0) prntsNo, c.cd_id cdId, c.cd_nm cdNm, c.cd_dstnct cdDstnct
+		from (select *
+	  			from mb_info
+      			where MB_NO = #{mbNo}) m
+      	right outer join 
+      		(select *
+	   			from cd 
+	    		where CD_DSTNCT in ('방문목적', '학문', '지역','연구분야')
+	    		) c on m.CD_ID = c.cd_id
+		order by 4,2;
+		]]>
+	</select>
+	<!-- 허주한 -->
+	<delete id="deleteInfoByType" parameterType="map">
+	<![CDATA[	
+		delete from DT using mb_info DT join cd UT on DT.CD_ID = UT.CD_ID 
+		where UT.CD_DSTNCT = #{dstnct} 
+		and DT.MB_NO = #{mbNo}; 	
+	]]>
+	</delete>
+	
+	<!-- 허주한 -->
+	<insert id="insertinfo" parameterType="map">
+	<![CDATA[	
+	insert into mb_info values ( #{mbNo}, (select cd_id from cd where cd_nm=#{cdNames}));
+	]]>
+	</insert>
+
+
+	<!-- 허주한 -->
+	<select id="getResearchCode" parameterType="List" resultType="codeVo">  
+		<![CDATA[
+		select c.cid cdId, c.cnm cdNm
+		from (select c.CD_ID cid, c.CD_NM cnm,  substr(c.cd_id,1,1) cpid
+				from cd c
+		        where c.CD_DSTNCT='연구분야') c, 
+		        (select substr(p.CD_ID,1,1) ppid
+				from cd p
+				where p.CD_DSTNCT='학문'
+				and p.CD_NM in 
+				]]>
+				<foreach item="item" index="index" collection="list" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+				<![CDATA[
+				) p
+				]]>
+				
+				
+		<![CDATA[
+		where c.cpid=p.ppid;
+		]]>
+		
+	</select>
+	
+	
+	<select id="getprivateInfo" parameterType="long" resultType="memberVo"> 
+		<![CDATA[
+		select MB_NO mbNo, MB_DSTNCT mbDstnct, NKNM nknm, SEX sex, BIRDT birdt, SNS_TKN_VALUE snsTknValue, SNS_DSTNCT snsDstnct, AGRG agrg, iden iden
+		from mb 
+		where MB_NO=#{mbNo }; 
+		]]>
+	</select>
+	
+	<update id="updateNknm" parameterType="map">
+			<![CDATA[
+				update mb set NKNM=#{nknm} where MB_NO=#{mbNo }
+			]]>
+			
+	</update>
+	
+
+	<update id="updateMbDstnct" parameterType="map">
+			<![CDATA[
+				update mb set SNS_DSTNCT=null, SNS_TKN_VALUE=NULL, GENAL_MB_DSTNCT='일반가입' 
+			]]>
+			
+			<if test="email!='-1'">
+			<![CDATA[
+			, IDEN=#{email}
+			]]>
+			</if>
+				
+			<![CDATA[	
+				 where MB_NO=#{mbNo }
+			]]>
+	</update>
+	
+	<select id="getCodes" parameterType="long" resultType="codeVo">  
+		<![CDATA[
+		select ifnull(m.mb_no,0) prntsNo, c.cd_id cdId, c.cd_nm cdNm, c.cd_dstnct cdDstnct
+		from (select *
+	  			from mb_info
+      			where MB_NO = #{mbNo}) m
+      	join 
+      		(select *
+	   			from cd 
+	    		where CD_DSTNCT in ('방문목적', '학문', '지역','연구분야')
+	    		) c on m.CD_ID = c.cd_id
+		order by 4,2;
+		]]>
+	</select>
+	
+	<!-- 허주한 -->
+	<select id="getArticleByInfo" parameterType="map" resultType="studyVo">  
+		<![CDATA[
+		select a.*, (select count(*) from wetbt w where w.PRNTS_WRTBT_NO = a.slctnNotiNo) count, (select WRTBT_TEXT from wetbt w where w.PRNTS_WRTBT_NO = a.slctnNotiNo order by RCMD_CO desc limit 1) subwrtbtText
+from (select  af.STORG_PATH 'university',af.STORG_PATH 'graduate',w.WRTBT_NO 'pno3',af.STORG_PATH 'major',w.WRTBT_NO 'pno2',af.STORG_PATH 'lab',w.WRTBT_NO 'pno1',w.WRTBT_NO 'slctnNotiNo',af.STORG_PATH 'symbolColorNm',w.BBS_NM 'slctnNotiDstnct',
+w.AVLBL_BEGIN_DT 'notiRegstDt',w.AVLBL_BEGIN_DT 'slctnBeginDt',w.AVLBL_BEGIN_DT 'slctnEndDt',w.WRTBT_NO 'dday',w.WRTBT_NO 'percent',af.STORG_PATH 'slctnTitle',af.STORG_PATH 'slctnYycl',af.STORG_PATH 'slctnSemstr',af.STORG_PATH 'pchrgYn', null bk21EorgnzSuprtYn, af.STORG_PATH 'storgPath',
+w.WRTBT_NO wrtbtNo, w.BBS_NM bbsNm, w.WRTBT_TEXT wrtbtText, w.WRTBT_TITLE wrtbtTitle, w.AVLBL_BEGIN_DT avlblBeginDt, af.STORG_PATH 'coSrorgPath', year(w.AVLBL_BEGIN_DT) 'year', month(w.AVLBL_BEGIN_DT) 'month', DAYOFMONTH(w.AVLBL_BEGIN_DT) 'day', w.wrtbt_dstnct wrtbtDstnct
+from
+(select w.WRTBT_NO, b.BBS_NM, w.WRTBT_TEXT, w.WRTBT_TITLE,w.AVLBL_BEGIN_DT, w.wrtbt_dstnct
+from bbs b, WETBT w
+where b.BBS_NO = w.BBS_NO and w.WRTBT_TYPE_DSTNCT='원글')w LEFT JOIN
+(select *
+from apndng_file
+group by PRNTS_NO)af
+on w.WRTBT_NO = af.PRNTS_NO
+union all
+select sn.*, af.STORG_PATH, sn.pno3 'WRTBT_NO',af.STORG_PATH 'BBS_NM',af.STORG_PATH 'WRTBT_TEXT',af.STORG_PATH 'WRTBT_TITLE', sn.NOTI_REGST_DT 'AVLBL_BEGIN_DT',af.STORG_PATH 'CO_STORG_PATH', year(NOTI_REGST_DT) 'year', month(NOTI_REGST_DT) 'month', DAYOFMONTH(NOTI_REGST_DT) 'day', null
+from
+(select p3.orgnz_nm 'university', c3.*
+from (select  p2.orgnz_nm 'graduate', p2.PRNTS_ORGNZ_NO pno3, c2.*
+from (select p.orgnz_nm 'major', p.PRNTS_ORGNZ_NO pno2, c.*
+from (select o.ORGNZ_NM 'lab', o.PRNTS_ORGNZ_NO pno1, sn.SLCTN_NOTI_NO, o.SYMBOL_COLOR_NM, sn.SLCTN_NOTI_DSTNCT,sn.NOTI_REGST_DT, 
+sn.SLCTN_BEGIN_DT, sn.SLCTN_END_DT ,TO_DAYS(sn.SLCTN_END_DT) - TO_DAYS(now()) "dday", TO_DAYS(now()) - TO_DAYS(sn.SLCTN_BEGIN_DT)/TO_DAYS(sn.SLCTN_END_DT) - TO_DAYS(sn.SLCTN_BEGIN_DT) "percent",
+sn.SLCTN_TITLE,sn.SLCTN_YYCL,sn.SLCTN_SEMSTR, sn.PCHRG_YN, sn.bk21_eorgnz_suprt_yn
+from organz o, slctn_Noti sn
+where o.ORGNZ_NO = sn.ORGNZ_NO
+and sn.SLCTN_END_DT >= now()) c left outer join organz p 
+on c.pno1 = p.ORGNZ_NO) c2 left outer join organz p2 
+on c2.pno2 = p2.ORGNZ_NO) c3 left outer join organz p3
+on c3.pno3 = p3.ORGNZ_NO )sn LEFT JOIN apndng_file af
+on sn.SLCTN_NOTI_NO = af.PRNTS_NO) a
+where (a.slctnNotiNo, slctnNotiDstnct) in (
+		select b.cdId, b.cdNm
+		from (select a.noti_no cdId, a.orgnz_no prntsId, a.noti_dstnct cdNm, a.cd_nm prntsCdNm, c2.cd_nm engCodeNm
+		from (select noti.noti_no, noti.orgnz_no, noti.noti_dstnct, c.CD_NM, (select cd_nm from cd where cd_id = concat(substr(c.cd_id,1,1),'000000')) pnm
+		from (select SLCTN_NOTI_NO noti_no, ORGNZ_NO orgnz_no, SLCTN_NOTI_DSTNCT noti_dstnct
+		from slctn_noti
+		]]>
+		
+		<if test="purposeListSize != 0">
+			<![CDATA[
+			where SLCTN_NOTI_DSTNCT in 
+			]]>
+			<foreach item="item" index="index" collection="purposeList" open="(" close=")" separator=",">
+					#{item}
+			</foreach> 
+		</if>
+		<![CDATA[
+        ) noti, cd c, slctn_noti_info noti_cd
+		where noti.noti_no = noti_cd.SLCTN_NOTI_NO
+		and noti_cd.cd_id = c.cd_id) a, organz_info oi, cd c2
+		where oi.CD_ID = c2.cd_id
+		and c2.CD_DSTNCT = '지역'
+		and a.orgnz_no = oi.orgnz_no
+		]]>
+		<if test="arListSize != 0">
+			<![CDATA[
+			and c2.cd_nm in
+			]]> 
+			<foreach item="item" index="index" collection="arList" open="(" close=")" separator=",">
+					#{item}
+			</foreach>
+		</if>
+		
+		<if test="studyListSize != 0">
+			<![CDATA[
+			and a.pnm in 
+			]]>
+			<foreach item="item" index="index" collection="studyList" open="(" close=")" separator=",">
+					#{item}
+			</foreach>
+		</if> 
+		
+		<![CDATA[
+		) b
+		where (b.cdNm = '대학원')
+		or (
+		b.cdNm = '연구실' 
+		]]>
+		
+		<if test="researchListSize != 0">
+		<![CDATA[
+		and b.prntsCdNm in 
+		]]>
+		<foreach item="item" index="index" collection="researchList" open="(" close=")" separator=",">
+					#{item}
+			</foreach>
+		</if> 
+		<![CDATA[
+		)
+		group by 1,2
+		union
+		select w.wrtbt_no, b.BBS_NM
+		from bbs b, wetbt w 
+		where b.BBS_NO = w.bbs_no
+		]]>
+		<if test="studyListSize != 0">
+		<![CDATA[
+		and bbs_nm in
+		]]>
+		<foreach item="item" index="index" collection="boardList" open="(" close=")" separator=",">
+					#{item}
+		</foreach>
+		</if>
+		<![CDATA[
+		and w.WRTBT_TYPE_DSTNCT='원글')
+		]]>
+		<if test="mbNo != -1">
+		<![CDATA[
+		
+		and (a.slctnNotiDstnct like '%게시판'
+			and a.slctnNotiNo in (select PRNTS_NO
+									from mb_scrap_info s, wetbt w
+									where s.MB_NO = #{mbNo}
+									and PRNTS_DSTNCT = '게시글'))
+		or (a.slctnNotiDstnct in ('연구실','대학원')
+			and a.slctnNotiNo in (select PRNTS_NO
+									from mb_scrap_info s, wetbt w
+									where s.MB_NO = #{mbNo}
+									and PRNTS_DSTNCT = '모집공고'))
+		
+		]]>
+		</if>
+		<![CDATA[
+		order by a.notiRegstDt desc
+		]]>
+		
+		
+		
+	</select>
+	
+	<select id="getReasearchList" parameterType="long" resultType="codeVo">
+	<![CDATA[
+	select sni.SLCTN_NOTI_NO cdId, c.cd_nm cdNm
+	from slctn_noti_info sni, cd c
+	where sni.SLCTN_NOTI_NO = #{slctnNotiNo}
+	and sni.CD_ID = c.CD_ID;
+	]]>
+	</select>
+	
+	<select id="getMyBoardList" parameterType="long" resultType="studyVo">
+	<![CDATA[
+	select wt.*, a.STORG_PATH storgPath
+	from (select w.AVLBL_BEGIN_DT notiRegstDt, year(w.AVLBL_BEGIN_DT) year, month(w.AVLBL_BEGIN_DT) month, DAYOFMONTH(w.AVLBL_BEGIN_DT) day ,w.WRTBT_DSTNCT slctnNotiDstnct, w.WRTBT_TEXT wrtbtText, w.WRTBT_TITLE wrtbtTitle
+	 , (select count(*) from wetbt w2 where w2.PRNTS_WRTBT_NO = w.wrtbt_no) count
+	 , (select w2.WRTBT_TEXT from wetbt w2 where w2.PRNTS_WRTBT_NO = w.wrtbt_no order by w2.RCMD_CO desc limit 1) subwrtbtText, w.WRTBT_DSTNCT wrtbtDstnct, w.mb_no, w.WRTBT_NO wrtbtNo
+	from bbs b, wetbt w
+	where b.BBS_NO = w.BBS_NO
+	and w.MB_NO = #{mbNo}
+	order by 1 desc) wt left outer join apndng_file a on wt.wrtbtNo = a.PRNTS_NO ;
+	]]>
+	</select>
+	
+	<select id="getBoardScrapList" parameterType="long" resultType="codeVo">
+	<![CDATA[
+	select PRNTS_NO prntsNo, sn.SLCTN_NOTI_DSTNCT prntsCdNm
+	from mb_scrap_info s, slctn_noti sn
+	where s.MB_NO = #{mbNo}
+	and PRNTS_DSTNCT = '모집공고'
+	and s.PRNTS_NO = sn.SLCTN_NOTI_NO
+	union
+	select PRNTS_NO , w.WRTBT_DSTNCT
+	from mb_scrap_info s, wetbt w
+	where s.MB_NO = #{mbNo}
+	and PRNTS_DSTNCT = '게시판'
+	and s.PRNTS_NO = w.WRTBT_NO
+	]]>
+	</select>
+	
+	<select id="existNknm" parameterType="String" resultType="memberVo">
+		<![CDATA[
+			select NKNM nknm
+			from mb
+			where nknm = #{nknm};
+		]]>
+	</select>
+	
+	<insert id="insertStudys" parameterType="map">
+	
+	<if test="type=='common'">
+		<![CDATA[
+		insert into mb_info values ( (select mb_no from mb where nknm = #{iden}), (select cd_id from cd where cd_nm=#{studys}));
+		]]>
+	</if>
+	<if test="type!='common'">
+		<![CDATA[
+		insert into mb_info values ( (select mb_no from mb where iden = #{iden}), (select cd_id from cd where cd_nm=#{studys}));
+		]]>
+	</if>
+	
+	</insert>
+	
+	<insert id="insertStudysFacebook" parameterType="map">
+	<![CDATA[
+		insert into mb_info values ( (select mb_no from mb where sns_tkn_value = #{iden}), (select cd_id from cd where cd_nm=#{studys}));
+
+	]]>
+	</insert>
+	
+	
+	
+
+</mapper>

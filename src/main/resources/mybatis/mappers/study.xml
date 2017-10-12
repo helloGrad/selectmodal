@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="study">
+
+	<!-- 박가혜  -->
+	<select id="selectMajorList" parameterType="string" resultType="studyVo">
+		<![CDATA[
+		select *
+		from
+		(select slctnNotiNo,orgnzNo,slctnNotiDstnct,cdNm, pCdNm, c.cd_Nm spCdNm
+		from
+		(select slctnNotiNo,orgnzNo,slctnNotiDstnct,cdNm, pCdNm, c.cd_Nm , c.PRNTS_CD_ID
+		from
+		(select noti.noti_no slctnNotiNo, noti.orgnz_no orgnzNo, noti.noti_dstnct slctnNotiDstnct, c.PRNTS_CD_ID, c.CD_NM cdNm, (select cd_nm from cd where cd_id = concat(substr(c.cd_id,1,1),'000000')) pCdNm
+		from (select SLCTN_NOTI_NO noti_no, ORGNZ_NO orgnz_no, SLCTN_NOTI_DSTNCT noti_dstnct
+		      from slctn_noti) noti, cd c, slctn_noti_info noti_cd
+		where noti.noti_no = noti_cd.SLCTN_NOTI_NO
+		and noti_cd.cd_id = c.cd_id)sn Left outer join cd c
+		on sn.PRNTS_CD_ID = c.cd_id)sn2 left outer join cd c
+		on sn2.PRNTS_CD_ID = c.cd_id)sn
+		where sn.pCdNm = #{type} order by sn.slctnNotiNo;
+		]]>
+	</select>	
+	
+		<!-- 박가혜  -->
+	<select id="selectBoardList" resultType="studyVo" parameterType="map">
+		<![CDATA[
+		select university, graduate, pno3, major, pno2, lab,pno1,SLCTN_NOTI_NO 'slctnNotiNo',SYMBOL_COLOR_NM 'symbolColorNm',SLCTN_NOTI_DSTNCT 'slctnNotiDstnct',
+		NOTI_REGST_DT 'notiRegstDt',SLCTN_BEGIN_DT 'slctnBeginDt',SLCTN_END_DT 'slctnEndDt',dday,percent,SLCTN_TITLE 'slctnTitle',SLCTN_YYCL 'slctnYycl',SLCTN_SEMSTR 'slctnSemstr',PCHRG_YN 'pchrgYn',BK21_EORGNZ_SUPRT_YN 'bk21EorgnzSuprtYn', STORG_PATH 'storgPath',WRTBT_NO 'wrtbtNo',
+		BBS_NM 'bbsNm',WRTBT_TEXT 'wrtbtText',WRTBT_TITLE 'wrtbtTitle',AVLBL_BEGIN_DT 'avlblBeginDt',WRTBT_DSTNCT 'wrtbtDstnct', CO_STORG_PATH 'coSrorgPath', year(NOTI_REGST_DT) 'year', month(NOTI_REGST_DT) 'month', DAYOFMONTH(NOTI_REGST_DT) 'day',count, subwrtbtText
+		 
+		
+		from
+		(select  af.STORG_PATH 'university',af.STORG_PATH 'graduate',w.WRTBT_NO 'pno3',af.STORG_PATH 'major',w.WRTBT_NO 'pno2',af.STORG_PATH 'lab',w.WRTBT_NO 'pno1',w.WRTBT_NO 'SLCTN_NOTI_NO',af.STORG_PATH 'SYMBOL_COLOR_NM',w.BBS_NM 'SLCTN_NOTI_DSTNCT',
+		w.AVLBL_BEGIN_DT 'NOTI_REGST_DT',w.AVLBL_BEGIN_DT 'SLCTN_BEGIN_DT',w.AVLBL_BEGIN_DT 'SLCTN_END_DT',w.WRTBT_NO 'dday',w.WRTBT_NO 'percent',af.STORG_PATH 'SLCTN_TITLE',af.STORG_PATH 'SLCTN_YYCL',af.STORG_PATH 'SLCTN_SEMSTR',af.STORG_PATH 'PCHRG_YN',af.STORG_PATH 'BK21_EORGNZ_SUPRT_YN',af.STORG_PATH 'STORG_PATH',
+		w.WRTBT_NO, w.BBS_NM, w.WRTBT_TEXT, w.WRTBT_TITLE,w.AVLBL_BEGIN_DT, w.WRTBT_DSTNCT, af.STORG_PATH 'CO_STORG_PATH', (select count(*) from wetbt e where w. WRTBT_NO= e.PRNTS_WRTBT_NO) count, 
+(select WRTBT_TEXT  from wetbt e where w. WRTBT_NO= e.PRNTS_WRTBT_NO    group by RCMD_CO desc limit 1) subwrtbtText
+		from
+		(select w.WRTBT_NO, b.BBS_NM, w.WRTBT_TEXT, w.WRTBT_TITLE,w.AVLBL_BEGIN_DT, w.WRTBT_DSTNCT
+		from bbs b, WETBT w
+		where b.BBS_NO = w.BBS_NO and w.WRTBT_TYPE_DSTNCT='원글')w LEFT JOIN
+		(select *
+		from apndng_file
+		group by PRNTS_NO)af
+		on w.WRTBT_NO = af.PRNTS_NO
+		union all
+		select sn.*, af.STORG_PATH, sn.pno3 'WRTBT_NO',af.STORG_PATH 'BBS_NM',af.STORG_PATH 'WRTBT_TEXT',af.STORG_PATH 'WRTBT_TITLE', sn.NOTI_REGST_DT 'AVLBL_BEGIN_DT', af.STORG_PATH 'WRTBT_DSTNCT',af.STORG_PATH 'CO_STORG_PATH',sn.pno3 'count', af.STORG_PATH 'subwrtbtText'
+		from
+		(select p3.orgnz_nm 'university', c3.*
+		from (select  p2.orgnz_nm 'graduate', p2.PRNTS_ORGNZ_NO pno3, c2.*
+		from (select p.orgnz_nm 'major', p.PRNTS_ORGNZ_NO pno2, c.*
+		from (select o.ORGNZ_NM 'lab', o.PRNTS_ORGNZ_NO pno1, sn.SLCTN_NOTI_NO, o.SYMBOL_COLOR_NM, sn.SLCTN_NOTI_DSTNCT,sn.NOTI_REGST_DT, 
+		sn.SLCTN_BEGIN_DT, sn.SLCTN_END_DT ,TO_DAYS(sn.SLCTN_END_DT) - TO_DAYS(now()) "dday", (TO_DAYS(now()) - TO_DAYS(sn.SLCTN_BEGIN_DT))/(TO_DAYS(sn.SLCTN_END_DT) - TO_DAYS(sn.SLCTN_BEGIN_DT)) "percent",
+		sn.SLCTN_TITLE,sn.SLCTN_YYCL,sn.SLCTN_SEMSTR, sn.PCHRG_YN,sn.BK21_EORGNZ_SUPRT_YN
+		from organz o, slctn_Noti sn
+		where o.ORGNZ_NO = sn.ORGNZ_NO
+		and sn.SLCTN_END_DT >= now()) c left outer join organz p 
+		on c.pno1 = p.ORGNZ_NO) c2 left outer join organz p2 
+		on c2.pno2 = p2.ORGNZ_NO) c3 left outer join organz p3
+		on c3.pno3 = p3.ORGNZ_NO )sn LEFT JOIN apndng_file af
+		on sn.SLCTN_NOTI_NO = af.PRNTS_NO)bo 
+		where (bo.SLCTN_NOTI_DSTNCT = #{type }) 
+		]]>
+		<choose>
+	     <when test="intMajorList.size != 0">
+	     			 <![CDATA[
+						 or (bo.SLCTN_NOTI_DSTNCT in ('대학원', '연구실') and bo.SLCTN_NOTI_NO in  
+						]]>
+					              	
+	            <foreach item="intMajorList" index="index" collection="intMajorList" open="(" close=")" separator=",">
+               	#{intMajorList}
+        		 </foreach>	
+        
+         <![CDATA[
+		 ) order by bo.NOTI_REGST_DT desc;
+		]]>		 
+	     </when>
+	     <otherwise>
+	     order by bo.NOTI_REGST_DT desc;
+	       </otherwise>
+	    </choose>
+	
+	</select>
+
+
+		<!-- 정예린  -->
+	
+	<select id="getSearchList" resultType="studyVo" parameterType="string">
+		<![CDATA[
+			select *
+			from (select orgnz_full_nm slctnTitle, orgnz_no as slctnNotiNo, '기관' as slctnNotiDstnct 
+				from organz 
+				union
+				select concat(ifnull(wrtbt_title,''),' ',ifnull(wrtbt_text,'')) text, wrtbt_no as no, '게시글' as 구분
+				from wetbt
+				union
+				select concat(o.orgnz_full_nm,' ',s.slctn_title) text, s.slctn_noti_no as no, s.SLCTN_NOTI_DSTNCT as 구분
+				from slctn_noti s, organz o
+				where s.orgnz_no=o.orgnz_no) search
+			where search.slctnTitle like '%${_parameter}%'		
+		]]>	
+	</select>
+	
+
+  
+
+
+</mapper>
