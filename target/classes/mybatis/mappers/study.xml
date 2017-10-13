@@ -98,7 +98,7 @@
 				select concat(o.orgnz_full_nm,' ',s.slctn_title) text, s.slctn_noti_no as no, s.SLCTN_NOTI_DSTNCT as 구분
 				from slctn_noti s, organz o
 				where s.orgnz_no=o.orgnz_no) search
-			where search.slctnTitle like '%${_parameter}%'		
+			where search.slctnTitle like '%${_parameter}%'			
 		]]>	
 	</select>
 	
